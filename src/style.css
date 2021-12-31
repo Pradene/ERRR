@@ -1,0 +1,70 @@
+@font-face 
+{
+    font-family: "Brown";
+    src: url("../static/fonts/Brown-Font/BrownHeavy\ Regular.ttf") format("truetype");
+}
+
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body
+{
+    height: 100%;
+    font-family: "Brown", sans-serif;
+}
+
+html
+{
+    background: #000000;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+a
+{    
+    text-decoration: none;
+}
+
+.webgl
+{
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    outline: none;
+}
+
+#title
+{
+    position: absolute;
+    z-index: 1;
+    top: 6vh;
+    left: 5vw;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.25rem;
+    text-align: center;
+}
+
+#nav
+{
+    position: absolute;
+    z-index: 1;
+    bottom: 6vh;
+    right: 5vw;
+    color: #fff;
+    font-weight: 300;
+    font-size: 1rem;
+    text-align: center;
+}
+
+#nav a
+{
+    color: #fff;
+}
