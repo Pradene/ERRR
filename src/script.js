@@ -104,7 +104,6 @@ PlaneGeometry.applyMatrix4( new THREE.Matrix4().makeTranslation(0, 0, 4) )
 var PlaneMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide }) 
 
 
-console.time('yo')
 
 for(let i = 0; i < 18; i++)
 {
@@ -131,8 +130,6 @@ for(let i = 0; i < 18; i++)
     
     myText.sync()
 }
-
-console.timeEnd('yo')
 
 
 
@@ -239,6 +236,8 @@ let animate = () =>
 
     if(group.position.y + (current * 0.004) <= 0)
     {
+        current = 0
+        
         cube.rotation.y = 0
         cube.scale.x = 1 
         cube.scale.y = 1       
@@ -248,7 +247,7 @@ let animate = () =>
         group.position.y = 0 
     }
 
-    if(cube.rotation.y + -(current * 0.0006) <= -Math.PI * 2)
+    if(cube.rotation.y - (current * 0.0006) <= -Math.PI * 2)
         current = 0
 
     
