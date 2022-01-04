@@ -2,7 +2,6 @@ import './style.css'
 import * as THREE from 'three'
 import {Text, preloadFont} from 'troika-three-text'
 import gsap from 'gsap'
-import { BackSide } from 'three'
 
 
 // Fonts
@@ -96,9 +95,9 @@ scene.add( group )
 // Initialize all planeGeometries
 
 if(window.innerWidth >= 500)
-    var PlaneGeometry = new THREE.PlaneGeometry(1.5, 1.5)
+    var PlaneGeometry = new THREE.PlaneGeometry(1.5, 1.5, 16, 16)
 else 
-    var PlaneGeometry = new THREE.PlaneGeometry(1, 1)
+    var PlaneGeometry = new THREE.PlaneGeometry(1, 1, 16, 16)
 
 PlaneGeometry.applyMatrix4( new THREE.Matrix4().makeTranslation(0, 0, 4) ) 
 var PlaneMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide }) 
@@ -108,8 +107,8 @@ var PlaneMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.Doub
 for(let i = 0; i < 18; i++)
 {
     var plane = new THREE.Mesh ( PlaneGeometry, PlaneMaterial )
-    plane.rotation.y = (Math.PI * 2 / 3) * i
-    plane.position.y = -(Math.PI * 2 / 3) * i
+    plane.rotation.y = (Math.PI * 2 / 3.33) * i
+    plane.position.y = -(Math.PI * 2 / 3.33) * i
 
     group.add( plane )
 
