@@ -6,13 +6,26 @@ import gsap from 'gsap'
 
 // Fonts
 
-preloadFont({ font: "/fonts/Brown-Font/BrownHeavy\ Regular.ttf" })
+let fontLoaded = false
+preloadFont({ 
+    font: "/fonts/Brown-Font/BrownHeavy\ Regular.ttf"
+    },
+    () => {
+        fontLoaded = true
+    }
+)
 
 
 // Textures 
 
-const loader = new THREE.TextureLoader()
-let texture = loader.load('/ERRR_Cover.jpg')
+let textureLoaded = false
+const textureLoader = new THREE.TextureLoader()
+let texture = textureLoader.load(
+    '/ERRR_Cover.jpg',
+    () => {
+        textureLoaded = true
+    }
+)
 
 
 // Morceaux
@@ -50,6 +63,7 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 
+
 // Sizes
 
 const sizes = {
@@ -61,7 +75,7 @@ const sizes = {
 // Camera
 
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.z = 6
+camera.position.set(12, 12, 9)
 scene.add(camera)
 
 
@@ -78,12 +92,13 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 
 
-// basic cube
+// Cube
 
 var geometry = new THREE.BoxGeometry( 1.25, 5, 1.25)
 var material = new THREE.MeshStandardMaterial( { color: 0x232487 } );
 var cube = new THREE.Mesh ( geometry, material )
 scene.add( cube )
+
 
 
 // Plane Group
@@ -92,24 +107,27 @@ var group = new THREE.Group()
 scene.add( group )
 
 
-// Initialize all planeGeometries
+// Initialize all planeGeometries and Text
 
 
 var PlaneGeometry = new THREE.PlaneGeometry(1.5, 1.5, 16, 16)
 
 PlaneGeometry.applyMatrix4( new THREE.Matrix4().makeTranslation(0, 0, 4) ) 
-var PlaneMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide }) 
+var PlaneMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true, opacity: 0 }) 
 
 
 
 for(let i = 0; i < 18; i++)
 {
+    // Plane
+
     var plane = new THREE.Mesh ( PlaneGeometry, PlaneMaterial )
     plane.rotation.y = (Math.PI * 2 / 3.33) * i
     plane.position.y = -(Math.PI * 2 / 3.33) * i
 
     group.add( plane )
 
+    // Text
 
     let myText = new Text()
     myText.text = morceaux[i]
@@ -127,6 +145,9 @@ for(let i = 0; i < 18; i++)
     
     myText.sync()
 }
+
+group.rotation.y = Math.PI / 3 
+group.position.y = -Math.PI / 3
 
 
 
@@ -157,6 +178,7 @@ window.addEventListener('resize', () =>
     renderer.setSize(sizes.width, sizes.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
+
 
 
 
@@ -200,12 +222,15 @@ let lerp = (start, end, ease) =>
 
 let current = 0
 
-let animate = () =>
+
+const tick = () =>
 {
+    // Animation Meshes
+
     current = lerp(current, diff || speed, ease)
 
 
-    if(group.position.y + (current * 0.004) <= 0)
+    if(group.position.y + (current * 0.004) <= -Math.PI / 3)
     {
         current = 0
         
@@ -214,8 +239,8 @@ let animate = () =>
         cube.scale.y = 1       
         cube.scale.z = 1 
 
-        group.rotation.y = 0        
-        group.position.y = 0 
+        group.rotation.y = Math.PI / 3 
+        group.position.y = -Math.PI / 3
     }
 
     if(cube.rotation.y - (current * 0.0006) <= -Math.PI * 2)
@@ -248,15 +273,23 @@ let animate = () =>
     speed *= 0.6
 
 
-    window.requestAnimationFrame(animate)
-}
-animate()
 
 
+    // Enter Animation
 
+    camera.lookAt(cube.position)
 
-const tick = () =>
-{
+    if(textureLoaded && fontLoaded)
+    {
+        gsap.to(camera.position, { x: 0, y: 0, z: 6, duration: 1.5 })
+
+        for(const children of group.children)
+            gsap.to(children.material, { opacity: 1, duration: 1, delay: 1.5 })
+
+        textureLoaded = false
+        fontLoaded = false
+    }
+
     // Render
     renderer.render(scene, camera)
 
