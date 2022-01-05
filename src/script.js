@@ -94,10 +94,8 @@ scene.add( group )
 
 // Initialize all planeGeometries
 
-if(window.innerWidth >= 500)
-    var PlaneGeometry = new THREE.PlaneGeometry(1.5, 1.5, 16, 16)
-else 
-    var PlaneGeometry = new THREE.PlaneGeometry(1, 1, 16, 16)
+
+var PlaneGeometry = new THREE.PlaneGeometry(1.5, 1.5, 16, 16)
 
 PlaneGeometry.applyMatrix4( new THREE.Matrix4().makeTranslation(0, 0, 4) ) 
 var PlaneMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide }) 
@@ -133,29 +131,6 @@ for(let i = 0; i < 18; i++)
 
 
 
-
-// Resize Meshes Function
-
-let resizeMeshes = () =>
-{
-    if(window.innerWidth <= 500)
-        for(let i = 0; i < 18; i++)
-        {   
-            group.children[i].scale.x = 0.75
-            group.children[i].scale.y = 0.75
-        }
-
-    else
-        for(let i = 0; i < 18; i++)
-        {   
-            group.children[i].scale.x = 1
-            group.children[i].scale.y = 1
-        }
-}
-
-
-
-
 // Lights
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
@@ -180,10 +155,7 @@ window.addEventListener('resize', () =>
 
     // Update renderer
     renderer.setSize(sizes.width, sizes.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))    
-
-    resizeMeshes()
-    
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
 
