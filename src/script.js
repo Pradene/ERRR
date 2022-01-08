@@ -122,8 +122,8 @@ for(let i = 0; i < 18; i++)
     // Plane
 
     var plane = new THREE.Mesh ( PlaneGeometry, PlaneMaterial )
-    plane.rotation.y = (Math.PI * 2 / 3.33) * i
-    plane.position.y = -(Math.PI * 2 / 3.33) * i
+    plane.rotation.y = (Math.PI * 2 / 3.33) * i + Math.PI * 2
+    plane.position.y = -(Math.PI * 2 / 3.33) * i - Math.PI * 2
 
     group.add( plane )
 
@@ -210,7 +210,7 @@ canvas.addEventListener('touchmove', (e) =>
 let speed = 0
 
 document.addEventListener('wheel', (e) =>
-    speed = e.deltaY
+    speed = e.deltaY * 0.8
 )
 
 let ease = 0.075
@@ -281,10 +281,19 @@ const tick = () =>
 
     if(textureLoaded && fontLoaded)
     {
-        gsap.to(camera.position, { x: 0, y: 0, z: 6, duration: 1.5 })
+        let time = 1.5
 
-        for(const children of group.children)
-            gsap.to(children.material, { opacity: 1, duration: 1, delay: 1.5 })
+        gsap.to(camera.position, { x: 0, y: 0, z: 6, duration: time })
+
+        let pi = Math.PI * 2
+
+        for(let i = 0; i < 18; i++)
+        {
+            gsap.to(group.children[i].material, { opacity: 1, duration: 1, delay: time })
+            
+            gsap.to(group.children[i].position, { y: `+=${pi}`, duration: 1, delay: time })
+            gsap.to(group.children[i].rotation, { y: `-=${pi}`, duration: 1, delay: time })
+        }
 
         textureLoaded = false
         fontLoaded = false
