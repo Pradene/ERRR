@@ -2,6 +2,8 @@ import './style.css'
 import * as THREE from 'three'
 import {Text, preloadFont} from 'troika-three-text'
 import gsap from 'gsap'
+import vertexShader from './shaders/vertex.glsl'
+import fragmentShader from './shaders/fragment.glsl'
 
 
 // Fonts
@@ -111,9 +113,21 @@ scene.add( group )
 
 
 var PlaneGeometry = new THREE.PlaneGeometry(1.5, 1.5, 16, 16)
+PlaneGeometry.applyMatrix4( new THREE.Matrix4().makeTranslation(0, 0, 4) )
 
-PlaneGeometry.applyMatrix4( new THREE.Matrix4().makeTranslation(0, 0, 4) ) 
-var PlaneMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true, opacity: 0 }) 
+const PlaneMaterial = new THREE.RawShaderMaterial({
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    side: THREE.DoubleSide,
+    transparent: true,
+    uniforms:
+    {
+        uStrenght: {value: 0},
+        uAlpha: {value: 0},
+        uTexture: {value: texture}
+    }
+})
+
 
 
 
@@ -222,9 +236,19 @@ let lerp = (start, end, ease) =>
 
 let current = 0
 
+let currentPosition = 0
+let previousPosition = 0
+let deltaPosition = 0
+
 
 const tick = () =>
 {
+    currentPosition = group.position.y
+    deltaPosition = currentPosition - previousPosition
+    previousPosition = group.position.y
+
+    PlaneMaterial.uniforms.uStrenght.value = deltaPosition * 2
+
     // Animation Meshes
 
     current = lerp(current, diff || speed, ease)
@@ -289,7 +313,7 @@ const tick = () =>
 
         for(let i = 0; i < 18; i++)
         {
-            gsap.to(group.children[i].material, { opacity: 1, duration: 1, delay: time })
+            gsap.to(PlaneMaterial.uniforms.uAlpha, {value: 1, delay: time})
             
             gsap.to(group.children[i].position, { y: `+=${pi}`, duration: 1, delay: time })
             gsap.to(group.children[i].rotation, { y: `-=${pi}`, duration: 1, delay: time })
