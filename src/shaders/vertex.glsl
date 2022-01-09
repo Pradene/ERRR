@@ -12,7 +12,8 @@ varying vec2 vUv;
 
 vec3 deformationCurve(vec3 position, vec2 uv, float strenght)
 {
-    position.x = position.x + (sin(uv.y * M_PI) * strenght);
+    position.x = position.x + (cos(uv.y * M_PI) * strenght * 2.0);
+    position.y = position.y - (cos(uv.y * M_PI) * strenght);
     return position;
 }
 
@@ -20,6 +21,7 @@ void main()
 {
     vec3 newPosition = deformationCurve(position, uv, uStrenght);
     vec4 modelPosition = modelMatrix * vec4(newPosition, 1.0);
+    modelPosition.z += sin(uv.x * M_PI) * 0.05;
 
     vec4 viewPosition = viewMatrix * modelPosition;
     vec4 projectedPosition = projectionMatrix * viewPosition;
