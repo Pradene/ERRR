@@ -244,12 +244,12 @@ let deltaPosition = 0
 const tick = () =>
 {
     // Shaders
-
+    
     currentPosition = group.position.y
     deltaPosition = currentPosition - previousPosition
     previousPosition = group.position.y
 
-    PlaneMaterial.uniforms.uStrenght.value = deltaPosition
+    PlaneMaterial.uniforms.uStrenght.value = deltaPosition * 2
 
     // Animation Meshes
 
